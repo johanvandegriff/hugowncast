@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -44,7 +45,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = "index.html"
 	}
 
-	isIndexRequest := r.URL.Path == "/" || filepath.Base(r.URL.Path) == "index.html" || filepath.Base(r.URL.Path) == ""
+	isIndexRequest := r.URL.Path == "/" || r.URL.Path == "/index.html" || r.URL.Path == ""
 
 	// For search engine bots and social scrapers return a special
 	// server-rendered page.
@@ -64,10 +65,41 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// If this is a directory listing request then return a 404
-	info, err := os.Stat(path.Join(config.WebRoot, r.URL.Path))
-	if err != nil || (info.IsDir() && !isIndexRequest) {
-		w.WriteHeader(http.StatusNotFound)
+	owncast_file := path.Join(config.WebRoot, r.URL.Path)
+	hugo_file := path.Join(config.HugoRoot, r.URL.Path)
+	hugo_404_file := path.Join(config.HugoRoot, "404.html")
+
+	//prioritize a file from owncast
+	_, err := os.Stat(owncast_file)
+	if err != nil {
+		//if that doesn't exist, use a file from hugo
+		_, err := os.Stat(hugo_file)
+		if err != nil {
+			//if that doesn't exist, send a 404
+			w.WriteHeader(http.StatusNotFound)
+			b, err := ioutil.ReadFile(hugo_404_file)
+			if err == nil {
+				//send the 404 page from hugo if it exists
+				w.Write(b)
+			} else {
+				//otherwise send a generic message
+				fmt.Fprint(w, `<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<title>404 Not Found</title>
+</head><body>
+<h1>Not Found</h1>
+<p>The requested URL was not found on this server.</p>
+</body></html>`)
+			}
+			return
+		}
+		// Set a cache control max-age header
+		middleware.SetCachingHeaders(w, r)
+	
+		// Set our global HTTP headers
+		middleware.SetHeaders(w)
+
+		http.ServeFile(w, r, hugo_file)
 		return
 	}
 
@@ -77,7 +109,31 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	// Set our global HTTP headers
 	middleware.SetHeaders(w)
 
-	http.ServeFile(w, r, path.Join(config.WebRoot, r.URL.Path))
+	if isIndexRequest {
+		//need to write half the page from owncast and half from hugo
+		w.WriteHeader(http.StatusOK)
+
+		if filepath.Base(owncast_file) != "index.html" {
+			owncast_file = path.Join(owncast_file, "index.html")
+		}
+		if filepath.Base(hugo_file) != "index.html" {
+			hugo_file = path.Join(hugo_file, "index.html")
+		}
+
+		owncast_buffer, err := ioutil.ReadFile(owncast_file)
+		if err == nil {
+			//send the owncast index.html page if it exists
+			w.Write(owncast_buffer)
+		}
+
+		hugo_buffer, err2 := ioutil.ReadFile(hugo_file)
+		if err2 == nil {
+			//send the hugo index.html page if it exists
+			w.Write(hugo_buffer)
+		}
+	} else {
+		http.ServeFile(w, r, owncast_file)
+	}
 }
 
 // Return a basic HTML page with server-rendered metadata from the config

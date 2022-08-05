@@ -1,0 +1,17 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="/js/web_modules/tailwindcss/dist/tailwind.min.css" rel="stylesheet" />
+    <!-- <link href="/js/web_modules/videojs/video-js.min.css" rel="stylesheet" /> -->
+    <!-- <link href="/js/web_modules/@videojs/themes/fantasy/index.css" rel="stylesheet" /> -->
+
+    <!-- <link href="/styles/video.css" rel="stylesheet" /> -->
+    <!-- <link href="/styles/chat.css" rel="stylesheet" /> -->
+    <!-- <link href="/styles/user-content.css" rel="stylesheet" /> -->
+    <link href="/styles/app.css" rel="stylesheet" />
+
+    {{- $title := print .Site.Title " | " .Title -}}
+    {{- if .IsHome -}}{{- $title = .Site.Title -}}{{- end -}}
+    <title>{{ $title }}</title>
+</head>

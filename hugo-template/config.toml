@@ -1,0 +1,32 @@
+baseURL = "https://example.com/"
+languageCode = "en-us"
+title = "cool title"
+theme = "hugowncast"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[permalinks]
+  tags = "/:title/"
+
+[menu]
+  [[menu.main]]
+    name = "home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "blog"
+    url = "/blog/"
+    weight = 2
+  [[menu.main]]
+    name = "featured"
+    url = "/featured/"
+    weight = 3
+  [[menu.main]]
+    name = "gallery"
+    url = "/gallery/"
+    weight = 4
+  [[menu.main]]
+    name = "about"
+    url = "/about/"
+    weight = 5

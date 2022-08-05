@@ -1009,6 +1009,7 @@ export default class App extends Component {
               chatDisabled=${chatDisabled}
               noVideoContent=${noVideoContent}
               handleChatPanelToggle=${this.handleChatPanelToggle}
+              displayChatPanel=${displayChatPanel}
             />
           </header>
         </div>

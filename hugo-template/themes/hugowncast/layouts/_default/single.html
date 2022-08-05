@@ -1,0 +1,9 @@
+{{- define "main" -}}
+<div class="boxes boxes-chat-hidden" style="grid-template-columns: auto">
+    <div class="box">
+        <h1 class="title">{{ .Title }}</h1>
+        {{- partial "metadata.html" . -}}
+        {{ .Content }}
+    </div>
+</div>
+{{- end -}}

@@ -23,6 +23,7 @@ export const ChatMenu = (props) => {
     showAuthModal,
     onFocus,
     onBlur,
+    displayChatPanel,
   } = props;
 
   const [chatMenuOpen, setChatMenuOpen] = useState(false);
@@ -91,10 +92,12 @@ export const ChatMenu = (props) => {
                 id="chat-toggle"
                 onClick=${handleChatPanelToggle}
                 style=${{
-                  display: chatDisabled || noVideoContent ? 'none' : 'flex',
+                  display: (chatDisabled || noVideoContent) && !displayChatPanel ? 'none' : 'flex',
                 }}
               >
-                <span>Toggle Chat</span>
+                <span>${
+                  (chatDisabled || noVideoContent) && displayChatPanel ? 'Close Chat' : 'Toggle Chat'
+                }</span>
                 <span><${ChatIcon} /></span>
               </button>
             </li>

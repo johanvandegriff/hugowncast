@@ -1,0 +1,83 @@
+      <div class="noscript">
+        <p style="font-weight: bold">Unfortunately, the livestream component (<a target="_blank" rel="noopener noreferrer" href="https://owncast.online">Owncast</a>) requires JavaScript, and your web browser does not seem to support it, or you have it disabled. [<a href="noscript.html">more info...</a>]</p>
+      </div>
+    </noscript>
+    <style>
+      :root {--novideo-container-height: 0; --user-image-width: 8em;}
+      /* :root {--novideo-container-height: clamp(16em, 30vw, 40em); --user-image-width: 8em;} */
+      /* :root {--novideo-container-height: clamp(8em, 15vw, 20em); --user-image-width: 8em;} */
+
+      footer.flex {visibility: hidden; line-height:0; padding: 0 !important;}
+
+      .streamer-name, .server-name {display: none;}
+      .user-content-header > div.my-8 {margin-top: 0;}
+      /* #app {margin-bottom: -60px;} */
+      /* #stream-info {margin-bottom: -55px;} */
+      .user-content {display: none;}
+      /* #external-actions-container {margin-bottom: -3.5em} */
+      #app-container {background-color: var(--header-bg-color);}
+      #stream-info {border-bottom-width: 0;}
+      .single-col main {position: initial;} /*scrollable even on small width*/
+      .single-col #chat-container {position: initial; height: calc(0.5 * calc(100vh - var(--video-container-height) - var(--header-height)))}
+      .single-col #user-content, .single-col #chat-container-wrap, .single-col #messages-container {margin-top: 0;}
+      #video-container {justify-content: center;}
+      #video, #video-container {min-height: 0 !important}
+    </style>
+    {{- partial "header.html" . -}}
+    {{- block "main" . }}{{- end -}}
+    {{- partial "footer.html" . -}}
+    <script>
+function updateClass(existingClass, add, remove) {
+  const existing = document.getElementsByClassName(existingClass);
+  for (var i=0; i< existing.length; i++) {
+    if (add) existing[i].classList.add(add);
+    if (remove) existing[i].classList.remove(remove);
+  }
+}
+
+function addClass(existingClass, add) {
+  updateClass(existingClass, add, null);
+}
+
+function removeClass(existingClass, remove) {
+  updateClass(existingClass, null, remove);
+}
+
+function updatePageWidth() {
+  const chat = document.getElementById("app-container").classList.contains("chat")
+  const chat_hidden = document.getElementById("app-container").classList.contains("chat-hidden")
+  const single_col = document.getElementById("app-container").classList.contains("single-col")
+  if (!chat || chat_hidden || single_col) {
+    document.getElementById("nav-border").style["margin-right"] = "0";
+    document.getElementById("content").style["margin-right"] = "0";
+    removeClass("ascii-art", "ascii-art-chat-open");
+    removeClass("boxes", "boxes-chat-open");
+    removeClass("flex-rc", "flex-rc-chat-open");
+    removeClass("flex-cr", "flex-cr-chat-open");
+  } else {
+    document.getElementById("nav-border").style["margin-right"] = "var(--right-col-width)";
+    document.getElementById("content").style["margin-right"] = "var(--right-col-width)";
+    addClass("ascii-art", "ascii-art-chat-open");
+    addClass("boxes", "boxes-chat-open");
+    addClass("flex-rc", "flex-rc-chat-open");
+    addClass("flex-cr", "flex-cr-chat-open");
+  }
+}
+
+window.addEventListener('load', (e) => {
+  console.log('page is fully loaded');
+  getFact();
+  updatePageWidth();
+  // setTimeout(updatePageWidth, 100);
+  // https://stackoverflow.com/questions/10612024/event-trigger-on-a-class-change
+  new MutationObserver(updatePageWidth).observe(document.getElementById("app-container"), { attributes: true })
+});
+
+document.body.addEventListener('click', (e) => {
+  // console.log(e.target.nodeName, e.target.id, e.target.parentElement.parentElement)
+  // if (e.target.nodeName == "BUTTON" && e.target.id === "chat-toggle") updatePageWidth();
+  updatePageWidth();
+});
+    </script>
+  </body>
+</html>

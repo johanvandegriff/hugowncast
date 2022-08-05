@@ -6,7 +6,9 @@ import (
 	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
+	cp "github.com/otiai10/copy"
 
+	"github.com/gohugoio/hugo/commands"
 	"github.com/owncast/owncast/auth"
 	"github.com/owncast/owncast/config"
 	"github.com/owncast/owncast/core/chat"
@@ -33,6 +35,8 @@ var (
 
 // Start starts up the core processing.
 func Start() error {
+	hugoBuild()
+
 	resetDirectories()
 
 	data.PopulateDefaults()
@@ -84,6 +88,31 @@ func Start() error {
 
 	return nil
 }
+
+func hugoBuild() {
+	_, err := os.Stat(config.HugoDir)
+	if err != nil {
+		log.Infoln("HugoDir did not exist, copying HugoTemplateDir")
+		err := cp.Copy(config.HugoTemplateDir, config.HugoDir)
+		if err != nil {
+			log.Fatalln("unable to copy HugoTemplateDir to HugoDir")
+		}
+	}
+
+	// based on:
+	// https://github.com/gohugoio/hugo/issues/2667
+	// https://github.com/bep/hugo-benchmark/blob/master/main.go
+	// https://github.com/gohugoio/hugo/blob/master/main.go
+
+	log.Infoln("Running Hugo background process to autodetect changes")
+	go commands.Execute([]string {
+		"--source",
+		config.HugoDir,
+		"--watch",
+		"--quiet",
+	})
+}
+
 
 func createInitialOfflineState() error {
 	transitionToOfflineVideoStreamContent()

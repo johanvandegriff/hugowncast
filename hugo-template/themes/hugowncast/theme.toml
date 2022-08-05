@@ -1,0 +1,12 @@
+name = "Hugowncast"
+license = "MIT"
+licenselink = "https://github.com/johanvandegriff/hugowncast/blob/master/LICENSE"
+description = ""
+homepage = "https://github.com/johanvandegriff/hugowncast"
+tags = []
+features = []
+min_version = "0.41.0"
+
+[author]
+  name = "Johan Vandegriff"
+  homepage = "https://johanv.net"

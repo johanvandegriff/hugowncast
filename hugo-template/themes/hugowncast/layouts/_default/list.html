@@ -1,0 +1,24 @@
+{{- define "main" -}}
+<h1 class="title">{{ .Title }}</h1>
+<div class="boxes">
+    {{- range .Pages.ByPublishDate.Reverse -}}
+    <div class="box">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{- if in .Params.Tags "featured" -}}
+        ⭐
+        {{- end -}}
+        </h3>
+        {{- partial "metadata.html" . -}}
+        <a class="summary" href="{{ .RelPermalink }}">
+            <p>{{ .Summary }}</p>
+        </a>
+    </div>
+    {{- end -}}
+    <!-- {{- if ne (mod (len .Pages) 2) 0 -}}
+    <div class="box" style="display: flex; justify-content: center; align-items: center;">
+        <h3>ᵉˣᵗʳᵃ ¯\_(ツ)_/¯ ˢᵖᵃᶜᵉ</h3>
+    </div>
+    {{- end -}} -->
+    <ul>
+</div>
+{{- end -}}

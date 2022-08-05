@@ -1,0 +1,76 @@
+    <style>
+      .ascii-art {
+        background-color: var(--header-bg-color);
+        color: rgba(90,103,216,1);
+        /* color: rgba(90,103,216,var(--text-opacity)); */
+        /* color: rgba(226,232,240,var(--bg-opacity)); */
+        border-bottom: 4px solid rgba(90,103,216,1);
+        /* border-bottom: 4px solid rgba(90,103,216,var(--text-opacity)); */
+        text-align: center;
+        line-height: 1.1;
+        font-weight: bold;
+        font-size: clamp(0.5em, 2.4vw, 1.25em);
+        /* margin-top: 42px; */
+        /* margin-top: -10px; */
+      }
+      .ascii-art-chat-open {
+        font-size: clamp(0.5em, calc(0.024 * calc(100vw - var(--right-col-width))), 1.25em);
+      }
+
+
+      /* https://stackoverflow.com/questions/47601564/equal-width-columns-in-css-grid#61240964 */
+      .boxes { display: grid; grid-gap: 10px; grid-template-columns: 1fr 1fr; grid-template-rows: auto; margin: 10px; }
+
+      .box {background-color: white; padding: 1%; border-radius: 12px; padding: 15px; min-width: 0}
+      #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {font-size: revert; font-weight: revert; margin-top: 10px; margin-bottom: 10px}
+      h1.title, h2.title, h3.title, h4.title, h5.title, h6.title {text-align: center; }
+      .box button, label.toggle {border: 1px solid black; border-radius: 5px; padding: 3px; background-color: var(--header-bg-color); color: white; margin-top: 15px;}
+      .box p {margin: revert;}
+      .box p.mono {font-family: 'Monospace', sans-serif; font-size: smaller;}
+
+      .flex-rc {display: flex; flex-direction: row;}
+      .flex-cr {display: flex; flex-direction: column;}
+
+
+      @media only screen and (max-width: 900px) {
+        .boxes {grid-template-columns: auto;}
+        .flex-rc {flex-direction: column;}
+        .flex-cr {flex-direction: row;}
+      }
+      @media only screen and (max-width: 1235px) {
+      /* @media only screen and (max-width: calc(900px + var(--right-col-width))) { */
+        .boxes-chat-open {grid-template-columns: auto;}
+        .flex-rc-chat-open {flex-direction: column;}
+        .flex-cr-chat-open {flex-direction: row;}
+      }
+
+      a {color: #0099ff;}
+
+      .nav {display: flex; flex-wrap: wrap; margin: 5px}
+      .nav-link {flex-grow: 1; margin: 5px; padding: 6px; text-align: center;}
+      .nav-link-selected {background-color: rgba(90,103,216,1); color: white}
+
+      body {background-color: rgba(226,232,240,1);}
+
+      ol {list-style-type: decimal; margin: 0px;}
+      ul {list-style-type: disc;margin: 0px;}
+
+      .box pre {overflow-x: auto; background-color: #111; color: white; padding: 10px; border-radius: 10px; margin: 3px}
+    </style>
+    <div id="nav-border">
+      <pre class="ascii-art">
+{{ partial "ascii-art.html" }}
+      </pre>
+      <nav id="nav" class="nav">
+        {{- $currentPage := . }}
+        {{- range .Site.Menus.main }}
+          {{- $menu_item_url := .URL | relLangURL }}
+          {{- $page_url:= $currentPage.RelPermalink | relLangURL }}
+          {{/* the menu item links to the current page (with relLangURL) */}}
+          <a target="_self" class="box nav-link {{ if eq $menu_item_url $page_url }}nav-link-selected{{ end }}" href="{{ .URL }}">
+            {{- $text := print .Name | safeHTML -}}
+            {{- $text -}}
+          </a>
+        {{- end -}}
+      </nav>
+    </div>

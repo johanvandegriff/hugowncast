@@ -1,0 +1,57 @@
+{{- define "main" -}}
+    <style>
+      /* .custom-thumbnail-image {background-image: none !important;} */
+      .custom-thumbnail-image {background-image: url("/gallery/drawings/images/wow-much-stream.png") !important;}
+    </style>
+    <section id="content">
+      <div class="boxes boxes-chat-hidden" style="grid-template-columns: auto;">
+        <div class="box flex-rc">
+          <div class="flex flex-cr items-center">
+            <img src="/logo" style="border-radius: 100%; min-width: var(--user-image-width);width: var(--user-image-width);height: var(--user-image-width);max-height: var(--user-image-width); margin: 1rem" />
+              <div>
+                <ul style="display: flex; flex-wrap: wrap; list-style-type: none" class="social-list m-2 text-center">
+                  <p class="follow-icon-list flex flex-row items-center justify-center flex-wrap">
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://github.com/"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/github.svg&quot;);" title="Find me on github"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on github</span></a></li>
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://keyoxide.org/"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/keyoxide.png&quot;);" title="Find me on keyoxide"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on keyoxide</span></a></li>
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://fosstodon.org/"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/mastodon.svg&quot;);" title="Find me on mastodon"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on mastodon</span></a></li>
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://odysee.com/"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/odysee.svg&quot;);" title="Find me on odysee"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on odysee</span></a></li>
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://www.twitch.tv/"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/twitch.svg&quot;);" title="Find me on twitch"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on twitch</span></a></li>
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://youtube.com/user/"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/youtube.svg&quot;);" title="Find me on youtube"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on youtube</span></a></li>
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://example.com"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/follow.svg&quot;);" title="Find me on follow"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on follow</span></a></li>
+                    <li><a class="user-social-item flex m-1" target="_blank" rel="me" href="https://example.com"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/img/platformlogos/default.svg&quot;);" title="Find me on more"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">Find me on more</span></a></li>
+                  </p>
+                </ul>
+              </div>
+          </div>
+          <div class="user-content-header">
+            <div class="my-4">
+              <p>Hi, I'm streamer! I love streaming.</p>
+              <p class="my-2">This site is also my livestream. When I go live, you will see my face in a video frame at the top of the page. :]</p>
+              <div class="text-gray-600 my-2">#stream #streaming #livestreaming #streaming #live #broadcasting</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="boxes boxes-chat-hidden">
+        <div class="box">
+          <h2>recent</h2>
+          <img class="popup" style="width:30%; display:block; float: right; max-width: 300px; border-radius: 12px; margin: 5px" src="/wow-much-stream.png">
+          <p>Recently, I have been streaming.</p>
+          <form method="get" action="/"><button>see the stream</button></form>
+        </div>
+
+        <div class="box">
+          <h2 id="drawings">drawings</h2>
+          <img class="popup" src="/wow-much-stream.png" id="drawing" style="width:66%; display:block; float: right; border-radius: 12px; margin: 5px" alt="Draing of the Erasable Inc Improv Group at UMD and Friends">
+          <p>I like drawing and of course I stream it, because I am streamer.</p>
+          <form method="get" action="/gallery/drawings/"><button>see more</button></form>
+        </div>
+
+        <div class="box">
+          <h2 id="blog">blog</h2>
+          <p>There are many cool posts on my blog, such masterpieces as Post1, Post2, and even Post3.</p>
+          <form method="get" action="/blog"><button>read more</button></form>
+        </div>
+      </div>
+    </section>
+{{- end -}}
