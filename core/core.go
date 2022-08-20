@@ -1,12 +1,15 @@
 package core
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 
-	log "github.com/sirupsen/logrus"
 	cp "github.com/otiai10/copy"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/gohugoio/hugo/commands"
 	"github.com/owncast/owncast/auth"
@@ -21,6 +24,8 @@ import (
 	"github.com/owncast/owncast/notifications"
 	"github.com/owncast/owncast/utils"
 	"github.com/owncast/owncast/yp"
+
+	"github.com/radovskyb/watcher"
 )
 
 var (
@@ -35,7 +40,7 @@ var (
 
 // Start starts up the core processing.
 func Start() error {
-	hugoBuild()
+	hugoBuildWatch()
 
 	resetDirectories()
 
@@ -90,29 +95,73 @@ func Start() error {
 }
 
 func hugoBuild() {
-	_, err := os.Stat(config.HugoDir)
-	if err != nil {
-		log.Infoln("HugoDir did not exist, copying HugoTemplateDir")
-		err := cp.Copy(config.HugoTemplateDir, config.HugoDir)
-		if err != nil {
-			log.Fatalln("unable to copy HugoTemplateDir to HugoDir")
-		}
-	}
-
-	// based on:
-	// https://github.com/gohugoio/hugo/issues/2667
-	// https://github.com/bep/hugo-benchmark/blob/master/main.go
-	// https://github.com/gohugoio/hugo/blob/master/main.go
-
-	log.Infoln("Running Hugo background process to autodetect changes")
-	go commands.Execute([]string {
-		"--source",
-		config.HugoDir,
-		"--watch",
-		"--quiet",
-	})
+	//run the actual hugo command, similar to "hugo ---source hugo" on the command line
+	commands.Execute([]string{"--source", config.HugoDir})
 }
 
+func hugoBuildWatch() {
+	//if the hugo dir doesn't exist or is empty, copy the template
+	listing, err := ioutil.ReadDir(config.HugoDir)
+	if err != nil {
+		log.Infof("HugoDir (%s) did not exist, copying HugoTemplateDir (%s): %w", config.HugoDir, config.HugoTemplateDir, err)
+		err := cp.Copy(config.HugoTemplateDir, config.HugoDir)
+		if err != nil {
+			log.Fatalf("unable to copy HugoDir (%s) to HugoTemplateDir (%s): %w", config.HugoDir, config.HugoTemplateDir, err)
+		}
+		go hugoBuild() //run the build after copying the template
+	} else if len(listing) == 0 { //this is needed for docker, since it doesn't have permission to overwrite the dir
+		log.Infof("HugoDir (%s) was empty, copying HugoTemplateDir (%s)", config.HugoDir, config.HugoTemplateDir)
+		listing, _ := ioutil.ReadDir(config.HugoTemplateDir)
+		for _, item := range listing {
+			log.Infof("  \\-- copying %s", item.Name())
+			err := cp.Copy(filepath.Join(config.HugoTemplateDir, item.Name()), filepath.Join(config.HugoDir, item.Name()))
+			if err != nil {
+				log.Fatalf("unable to copy HugoDir (%s) to HugoTemplateDir (%s): %w", config.HugoDir, config.HugoTemplateDir, err)
+			}
+		}
+		go hugoBuild() //run the build after copying the template
+	}
+
+	//set up a file watch (the one built in to hugo would stop watching after an error)
+	w := watcher.New()
+	w.SetMaxEvents(1) // allow at most 1 event per watch cycle, to avoid building many times
+
+	//exclude the "hugo/public" folder to avoid the build output triggering more builds
+	excludeDir, err := filepath.Abs(config.HugoRoot)
+	if err != nil {
+		log.Fatalf("error getting absolute path of HugoRoot (%s): %w", config.HugoRoot, err)
+	}
+	exclude_regex := regexp.MustCompile(fmt.Sprintf("^%s.*$", excludeDir))
+
+	//run the hugo build when a file watch event comes in
+	go func() {
+		for {
+			select {
+			case event := <-w.Event:
+				if !exclude_regex.MatchString(event.Path) {
+					log.Infoln(event) // Print the event's info.
+					hugoBuild()
+				}
+			case err := <-w.Error:
+				log.Fatalln(err)
+			case <-w.Closed:
+				return
+			}
+		}
+	}()
+
+	// Watch test_folder recursively for changes.
+	if err := w.AddRecursive(config.HugoDir); err != nil {
+		log.Fatalln(err)
+	}
+
+	go func() {
+		// Start the watching process
+		if err := w.Start(config.HugoRefreshTime); err != nil {
+			log.Fatalln(err)
+		}
+	}()
+}
 
 func createInitialOfflineState() error {
 	transitionToOfflineVideoStreamContent()

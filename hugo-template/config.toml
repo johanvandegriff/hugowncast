@@ -2,6 +2,7 @@ baseURL = "https://example.com/"
 languageCode = "en-us"
 title = "cool title"
 theme = "hugowncast"
+cleanDestinationDir = true
 
 [markup.goldmark.renderer]
   unsafe = true

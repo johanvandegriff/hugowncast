@@ -1,4 +1,4 @@
-{{- if .Params.rawHTML -}}{{- .Content -}}{{- else -}}<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     {{- partial "head.html" . -}}
     <body>
@@ -8,4 +8,4 @@
         </section>
         {{- partial "footer.html" . -}}
     </body>
-</html>{{- end -}}
+</html>

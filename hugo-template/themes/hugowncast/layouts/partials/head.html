@@ -1,8 +1,10 @@
 <head>
     <meta charset="utf-8">
+    {{- if .Params.viewport -}}{{- .Params.viewport | safeHTML -}}
+    {{- else -}}
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link href="/js/web_modules/tailwindcss/dist/tailwind.min.css" rel="stylesheet" />
+    {{- end -}}
+    <!-- <link href="/js/web_modules/tailwindcss/dist/tailwind.min.css" rel="stylesheet" /> -->
     <!-- <link href="/js/web_modules/videojs/video-js.min.css" rel="stylesheet" /> -->
     <!-- <link href="/js/web_modules/@videojs/themes/fantasy/index.css" rel="stylesheet" /> -->
 

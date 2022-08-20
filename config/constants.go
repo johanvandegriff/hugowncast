@@ -1,6 +1,9 @@
 package config
 
-import "path/filepath"
+import (
+	"path/filepath"
+	"time"
+)
 
 const (
 	// StaticVersionNumber is the version of Owncast that is used when it's not overwritten via build-time settings.
@@ -13,6 +16,8 @@ const (
 	HugoDir = "hugo"
 	// HugoTemplateDir is what HugoDir is initialized to if it doesn't exist
 	HugoTemplateDir = "hugo-template"
+	// HugoTemplateDir is what HugoDir is initialized to if it doesn't exist
+	HugoRefreshTime = time.Millisecond * 1000
 	// FfmpegSuggestedVersion is the version of ffmpeg we suggest.
 	FfmpegSuggestedVersion = "v4.1.5" // Requires the v
 	// DataDirectory is the directory we save data to.

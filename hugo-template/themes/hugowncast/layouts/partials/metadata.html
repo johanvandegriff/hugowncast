@@ -1,10 +1,9 @@
-{{- $dateTime := .PublishDate.Format "2006-01-02" -}}
-{{- $dateFormat := .Site.Params.dateFormat | default "Jan 2, 2006" -}}
-
-{{- if ne $dateTime "0001-01-01" -}}
-    📅
-    <time datetime="{{ $dateTime }}">{{- .PublishDate.Format $dateFormat -}}</time>
+{{- if .PublishDate -}}
+    📅{{- partial "date.html" .PublishDate -}}
 {{- end -}}
+<!-- {{- if .Lastmod }}
+    [updated {{ partial "date.html" .Lastmod -}}]
+{{- end -}} -->
 {{- if gt (len (.GetTerms "tags")) 0 -}}
     🏷
     {{- range (.GetTerms "tags") -}}
