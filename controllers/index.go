@@ -33,6 +33,16 @@ type MetadataPage struct {
 	SocialHandles []models.SocialHandle
 }
 
+func serveFileAndHeaders(w http.ResponseWriter, r *http.Request, file string) {
+	// Set a cache control max-age header
+	middleware.SetCachingHeaders(w, r)
+
+	// Set our global HTTP headers
+	middleware.SetHeaders(w)
+
+	http.ServeFile(w, r, file)
+}
+
 // IndexHandler handles the default index route.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	middleware.EnableCors(w)
@@ -69,9 +79,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	hugo_file := path.Join(config.HugoRoot, r.URL.Path)
 	hugo_404_file := path.Join(config.HugoRoot, "404.html")
 
-	//prioritize a file from owncast
+	//prioritize a file from owncast, except for index.html which always comes from hugo
 	_, err := os.Stat(owncast_file)
-	if err != nil {
+	if err != nil || isIndexRequest {
 		//if that doesn't exist, use a file from hugo
 		_, err := os.Stat(hugo_file)
 		if err != nil {
@@ -93,46 +103,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-		// Set a cache control max-age header
-		middleware.SetCachingHeaders(w, r)
-	
-		// Set our global HTTP headers
-		middleware.SetHeaders(w)
-
-		http.ServeFile(w, r, hugo_file)
-		return
-	}
-
-	// Set a cache control max-age header
-	middleware.SetCachingHeaders(w, r)
-
-	// Set our global HTTP headers
-	middleware.SetHeaders(w)
-
-	if isIndexRequest {
-		//need to write half the page from owncast and half from hugo
-		w.WriteHeader(http.StatusOK)
-
-		if filepath.Base(owncast_file) != "index.html" {
-			owncast_file = path.Join(owncast_file, "index.html")
-		}
-		if filepath.Base(hugo_file) != "index.html" {
-			hugo_file = path.Join(hugo_file, "index.html")
-		}
-
-		owncast_buffer, err := ioutil.ReadFile(owncast_file)
-		if err == nil {
-			//send the owncast index.html page if it exists
-			w.Write(owncast_buffer)
-		}
-
-		hugo_buffer, err2 := ioutil.ReadFile(hugo_file)
-		if err2 == nil {
-			//send the hugo index.html page if it exists
-			w.Write(hugo_buffer)
-		}
+		serveFileAndHeaders(w, r, hugo_file)
 	} else {
-		http.ServeFile(w, r, owncast_file)
+		serveFileAndHeaders(w, r, owncast_file)
 	}
 }
 

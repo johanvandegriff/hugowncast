@@ -3,15 +3,12 @@
 <div class="boxes">
     {{- range .Pages.ByPublishDate.Reverse -}}
     <div class="box">
-        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a>
-        {{- if in .Params.Tags "featured" -}}
-        ⭐
-        {{- end -}}
-        </h3>
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{- if in .Params.Tags "featured" -}}⭐{{- end -}}
+        </h2>
         {{- partial "metadata.html" . -}}
-        <a class="summary" href="{{ .RelPermalink }}">
-            <p>{{ .Summary }}</p>
-        </a>
+        <p>{{ .Summary }}</p>
+        <a class="summary" href="{{ .RelPermalink }}">read more...</a>
     </div>
     {{- end -}}
     <!-- {{- if ne (mod (len .Pages) 2) 0 -}}

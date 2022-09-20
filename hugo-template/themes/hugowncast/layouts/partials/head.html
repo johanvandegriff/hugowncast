@@ -1,19 +1,38 @@
 <head>
     <meta charset="utf-8">
     {{- if .Params.viewport -}}{{- .Params.viewport | safeHTML -}}
-    {{- else -}}
+    {{- else }}
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{- end -}}
-    <!-- <link href="/js/web_modules/tailwindcss/dist/tailwind.min.css" rel="stylesheet" /> -->
-    <!-- <link href="/js/web_modules/videojs/video-js.min.css" rel="stylesheet" /> -->
-    <!-- <link href="/js/web_modules/@videojs/themes/fantasy/index.css" rel="stylesheet" /> -->
-
-    <!-- <link href="/styles/video.css" rel="stylesheet" /> -->
-    <!-- <link href="/styles/chat.css" rel="stylesheet" /> -->
-    <!-- <link href="/styles/user-content.css" rel="stylesheet" /> -->
+    {{ end -}}
     <link href="/styles/app.css" rel="stylesheet" />
 
-    {{- $title := print .Site.Title " | " .Title -}}
+    {{- $title := .Title -}}
     {{- if .IsHome -}}{{- $title = .Site.Title -}}{{- end -}}
+
+    {{- $description := $title -}}
+    {{- if isset .Params "description" -}}
+        {{- $description = .Params.description -}}
+    {{- end -}}
+    {{- $image := .Params.image -}}
+    {{- $url := .Permalink -}}
+    {{- $site_name := "johanv.net" }}
+
+    <meta name="description" content="{{ $description }}">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Johan Vandegriff">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:site_name" content="{{ $site_name }}">
+    <meta property="og:url" content="{{ $url }}">
+    <meta property="og:description" content="{{ $description }}">
+    <meta property="og:image" content="{{ $image }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="{{ $url }}">
+    <meta name="twitter:title" content="{{ $title }}">
+    <meta name="twitter:description" content="{{ $description }}">
+    <meta name="twitter:image" content="{{ $image }}">
+
     <title>{{ $title }}</title>
 </head>

@@ -10,6 +10,11 @@ cleanDestinationDir = true
 [permalinks]
   tags = "/:title/"
 
+[params]
+  description = "my site description"
+  author = "my name"
+  image = "https://example.com/logo"
+
 [menu]
   [[menu.main]]
     name = "home"

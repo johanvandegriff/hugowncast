@@ -1,0 +1,49 @@
+{{- define "main" -}}
+<div class="boxes boxes-chat-hidden" style="grid-template-columns: auto">
+    <div class="box">
+        <h1 class="title">{{ .Title }}</h1>
+        {{- partial "metadata.html" . -}}
+        <p><a href="..">back to all galleries</a></p>
+        {{ .Content }}
+        <style>
+            div.gallery {
+               display: flex;
+               flex-wrap: wrap;
+            }
+            div.gallery a, div.gallery video {
+                flex-grow: 1;
+                object-fit: cover;
+                margin: 2px;
+                display: flex;
+            }
+            div.gallery video {
+                /* width: 200px; */
+                min-width: 200px;
+                max-width: 400px;
+                height: 200px;
+                border-radius: 5px;
+            }
+            div.gallery a img {
+                height: 200px;
+                object-fit: cover;
+                flex-grow: 1;
+                border-radius: 5px;
+            }
+        </style>
+        <div class="gallery">
+            <!-- https://netfactory.dk/posts/2020/hugo-gallery/ -->
+            {{- range .Page.Resources -}}
+                {{- if strings.HasSuffix . ".mp4" -}}
+                <video controls="">
+                    <source src="{{ . }}" type="video/mp4">
+                </video>
+                {{- else -}}
+                <a data-fancybox="gallery" href="{{ . }}">
+                    <img src="{{ (.Fill "200x200 q100 Center").RelPermalink }}" alt="">
+                </a>
+                {{- end -}}
+            {{- end -}}
+        </div>        
+    </div>
+</div>
+{{- end -}}

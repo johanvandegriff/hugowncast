@@ -1,4 +1,12 @@
     <style>
+      /*wikipedia-style "external link" indicator*/
+      a[target="_blank"] {
+        background-image: url(/external-link-ltr-icon.svg);
+        background-position: center right;
+        background-repeat: no-repeat;
+        padding-right: 13px;
+      }
+
       .ascii-art {
         background-color: var(--header-bg-color);
         color: rgba(90,103,216,1);
@@ -56,8 +64,8 @@
       html {line-height: 1.5; font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";}
       body {margin: 0; background-color: rgba(226,232,240,1);}
 
-      ol {list-style-type: decimal; margin: 0px;}
-      ul {list-style-type: disc;margin: 0px;}
+      ol {list-style-type: decimal; margin: 0px; padding: revert;}
+      ul {list-style-type: disc; margin: 0px; padding: revert;}
 
       .box pre {overflow-x: auto; background-color: #111; color: white; padding: 10px; border-radius: 10px; margin: 3px}
     </style>
@@ -66,14 +74,29 @@
 {{ partial "ascii-art.html" }}
       </pre>
       <nav id="nav" class="nav">
-        {{- $currentPage := . }}
+        {{- $currentPageURL := .RelPermalink | relLangURL }}
+        {{- $selectedNavItem := "/" -}}
+
+        <!-- https://github.com/gohugoio/hugo/issues/9509 -->
+        {{- $navLengths := slice -}}
         {{- range .Site.Menus.main }}
-          {{- $menu_item_url := .URL | relLangURL }}
-          {{- $page_url:= $currentPage.RelPermalink | relLangURL }}
-          {{/* the menu item links to the current page (with relLangURL) */}}
-          <a target="_self" class="box nav-link {{ if eq $menu_item_url $page_url }}nav-link-selected{{ end }}" href="{{ .URL }}">
-            {{- $text := print .Name | safeHTML -}}
-            {{- $text -}}
+          {{- $navItemURL := .URL | relLangURL }}
+          {{- $navLengths = $navLengths | append (dict "length" (len $navItemURL) "url" $navItemURL) -}}
+        {{- end -}}
+
+        <!-- find the nav item that the current URL starts with
+          makes sure to check the longest possibilities last,
+          so it will end up with the longest one that matched -->
+        {{ range sort $navLengths "length" "asc" }}
+          {{- if hasPrefix $currentPageURL .url -}}
+            {{- $selectedNavItem = .url -}}
+          {{- end -}}
+        {{ end }}
+
+        {{- range .Site.Menus.main }}
+          {{- $navItemURL := .URL | relLangURL }}
+          <a target="_self" class="box nav-link{{ if eq $selectedNavItem $navItemURL }} nav-link-selected{{ end }}" href="{{ .URL }}">
+            {{- print .Name | safeHTML -}}
           </a>
         {{- end -}}
       </nav>

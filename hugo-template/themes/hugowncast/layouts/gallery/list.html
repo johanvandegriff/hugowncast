@@ -1,0 +1,19 @@
+{{- define "main" -}}
+<h1 class="title">{{ .Title }}</h1>
+<div class="boxes">
+    {{- range .Pages -}}
+    <div class="box">
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{- if in .Params.Tags "featured" -}}⭐{{- end -}}
+        </h2>
+        {{- partial "metadata.html" . -}}
+        <a class="summary" href="{{ .RelPermalink }}">
+            <img src="{{ ((index .Resources 0).Fill "384x216 q100 Center").RelPermalink }}" alt="thumbnail" style="width: 100%; border-radius: 15px; max-width: revert; max-height: revert" />
+        </a>
+        <p>{{ .Summary }}</p>
+        <a class="summary" href="{{ .RelPermalink }}"><p>see more...</p></a>
+    </div>
+    {{- end -}}
+    <ul>
+</div>
+{{- end -}}
