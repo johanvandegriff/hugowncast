@@ -89,7 +89,7 @@ class ModeratorMenu extends Component {
     document.removeEventListener('mousedown', this.handleClickOutside, false);
   }
 
-  handleClickOutside = (e) => {
+  handleClickOutside(e) {
     if (
       this.menuNode &&
       !this.menuNode.current.contains(e.target) &&
