@@ -13,6 +13,13 @@
     <div id="messages-only"></div>
 
     <script type="module">
+      var remote_data = window.location.href.split('?')[1];
+      // const local_data = window.location.href.split('#')[1];
+      if (remote_data !== undefined) {
+        remote_data = remote_data.split('#')[0];
+        document.body.style['background-color'] = '#' + remote_data;
+      }
+
       import { h, render } from '/js/web_modules/preact.js';
       import htm from '/js/web_modules/htm.js';
       const html = htm.bind(h);
