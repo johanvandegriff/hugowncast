@@ -1,5 +1,7 @@
 {{- define "main" -}}
-<h1 class="title">{{ .Title }}</h1>
+<h1 class="title">{{ .Title }}
+<a href="index.xml" target="_blank"><img alt="rss feed" src="/rss.webp" style="width: 18px" /></a>
+</h1>
 <div class="boxes">
     {{- range .Pages.ByPublishDate.Reverse -}}
     <div class="box">
