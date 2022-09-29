@@ -1,0 +1,9 @@
+<ul style="display: flex; flex-wrap: wrap; list-style-type: none; padding: 0" class="social-list m-2 text-center">
+    <p class="follow-icon-list flex flex-row items-center justify-center flex-wrap">
+    {{ range . }}
+        {{- $icon := index (split . " ") 0 -}}
+        {{- $url := index (split . " ") 1 -}}
+        <li><a class="user-social-item flex m-1" rel="me" href="{{- $url -}}"><span class="platform-icon rounded-lg bg-no-repeat" style="background-image: url(&quot;/icons-96x96/{{- $icon -}}.png&quot;);" title="find me on {{- $icon -}}"></span><span class="platform-label visually-hidden text-indigo-800 text-xs uppercase max-w-xs inline-block">find me on {{- $icon -}}</span></a></li>
+    {{ end }}
+    </p>
+</ul>

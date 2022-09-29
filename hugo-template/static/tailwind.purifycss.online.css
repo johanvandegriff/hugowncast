@@ -5,6 +5,7 @@
 .relative {position: relative}
 .absolute {position: absolute}
 .z-10 {z-index: 10}
+.z-50 {z-index: 50}
 
 .text-sm {font-size: .875rem}
 .truncate {overflow: hidden;text-overflow: ellipsis;white-space: nowrap}
