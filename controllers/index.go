@@ -57,12 +57,13 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	isIndexRequest := r.URL.Path == "/" || r.URL.Path == "/index.html" || r.URL.Path == ""
 
+	//this is disabled since I want the search metadata to come from hugo
 	// For search engine bots and social scrapers return a special
 	// server-rendered page.
-	if utils.IsUserAgentABot(r.UserAgent()) && isIndexRequest {
-		handleScraperMetadataPage(w, r)
-		return
-	}
+	// if utils.IsUserAgentABot(r.UserAgent()) && isIndexRequest {
+	// 	handleScraperMetadataPage(w, r)
+	// 	return
+	// }
 
 	if utils.IsUserAgentAPlayer(r.UserAgent()) && isIndexRequest {
 		http.Redirect(w, r, "/hls/stream.m3u8", http.StatusTemporaryRedirect)
