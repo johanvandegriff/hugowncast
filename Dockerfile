@@ -1,9 +1,9 @@
 # Perform a build
-FROM golang:alpine AS build
+FROM golang:1.18 AS build
 RUN mkdir /build
 ADD . /build
 WORKDIR /build
-RUN apk update && apk add --no-cache git gcc build-base linux-headers
+#RUN apk update && apk add --no-cache git gcc build-base linux-headers
 
 ARG VERSION=dev
 ENV VERSION=${VERSION}
