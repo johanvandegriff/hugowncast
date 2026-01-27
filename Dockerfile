@@ -12,7 +12,7 @@ ENV GIT_COMMIT=${GIT_COMMIT}
 ARG NAME=docker
 ENV NAME=${NAME}
 
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags "-extldflags \"-static\" -s -w -X github.com/johanvandegriff/hugowncast/config.GitCommit=$GIT_COMMIT -X github.com/johanvandegriff/hugowncast/config.VersionNumber=$VERSION -X github.com/johanvandegriff/hugowncast/config.BuildPlatform=$NAME" -o owncast .
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags "-extldflags \"-static\" -s -w -X github.com/epjane/hugowncast/config.GitCommit=$GIT_COMMIT -X github.com/epjane/hugowncast/config.VersionNumber=$VERSION -X github.com/epjane/hugowncast/config.BuildPlatform=$NAME" -o owncast .
 
 # Create the image by copying the result of the build into a new alpine image
 FROM alpine

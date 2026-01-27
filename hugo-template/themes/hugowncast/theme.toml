@@ -1,8 +1,8 @@
 name = "Hugowncast"
 license = "MIT"
-licenselink = "https://github.com/johanvandegriff/hugowncast/blob/master/LICENSE"
+licenselink = "https://github.com/epjane/hugowncast/blob/master/LICENSE"
 description = ""
-homepage = "https://github.com/johanvandegriff/hugowncast"
+homepage = "https://github.com/epjane/hugowncast"
 tags = []
 features = []
 min_version = "0.41.0"
